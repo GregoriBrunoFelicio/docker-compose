@@ -1,7 +1,5 @@
-version: '3.9'
-
 services:
-  # 🐳 MongoDB
+  # mongo
   mongo:
     image: mongo:7
     container_name: mongo
@@ -15,7 +13,7 @@ services:
     networks:
       - devnet
 
-  # 🚀 Redis
+  # redis
   redis:
     image: redis:7
     container_name: redis
@@ -26,25 +24,39 @@ services:
     networks:
       - devnet
 
-  # 🐰 RabbitMQeb
+  # rabbitmq
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     ports:
-      - "5672:5672"       # protocolo AMQP
-      - "15672:15672"     # painel de administração
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     networks:
       - devnet
 
-# 📦 Volumes
+  # postgres
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: devdb
+    networks:
+      - devnet
+
 volumes:
   mongo_data:
   redis_data:
+  postgres_data:
 
-# 🌐 Rede
 networks:
   devnet:
     driver: bridge
